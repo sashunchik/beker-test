@@ -1,66 +1,252 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# Laravel API - Task Management System
 
-## About Laravel
+This is a simple RESTful API built with the Laravel framework, Docker, and PostgreSQL. It allows authenticated users to manage a list of tasks, with CRUD operations and filtering by task status (completed or not completed).
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## **Table of Contents**
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- [Prerequisites](#prerequisites)
+- [Step-by-Step Deployment](#step-by-step-deployment)
+- [Testing the API](#testing-the-api)
+- [API Routes](#api-routes)
+- [Project Structure](#project-structure)
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## **Prerequisites**
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Before you begin, ensure that you have the following installed on your system:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- **Docker**: For running the application inside a containerized environment.
+- **Docker Compose**: For managing multi-container applications.
+- **PHP 8.x** and **Composer** (if you want to work locally without Docker).
+- **Postman** or **cURL**: For testing API endpoints.
+  
+If you're running the project with Docker (recommended), these tools should already be handled through Laravel Sail.
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## **Step-by-Step Deployment**
 
-### Premium Partners
+### 1. Clone the Repository
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+Clone the repository to your local machine:
 
-## Contributing
+```bash
+git clone https://github.com/your-username/task-management-api.git
+cd task-management-api
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 2. Set Up Environment Variables
 
-## Code of Conduct
+Copy the `.env.example` file to `.env`:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+cp .env.example .env
+```
 
-## Security Vulnerabilities
+Update the `.env` file with your local configurations. Make sure the database settings match the PostgreSQL container if you're using Docker.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Example:
 
-## License
+```env
+DB_CONNECTION=pgsql
+DB_HOST=postgres
+DB_PORT=5432
+DB_DATABASE=task_management
+DB_USERNAME=postgres
+DB_PASSWORD=secret
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 3. Start Docker Containers
+
+Start the Laravel application with Docker using Laravel Sail:
+
+```bash
+./vendor/bin/sail up -d
+```
+
+This will launch the application, PostgreSQL, and other necessary services in Docker containers.
+
+### 4. Install Dependencies
+
+If you're not using Docker and prefer to run the app locally:
+
+- Install Composer dependencies:
+
+```bash
+composer install
+```
+
+- If using Docker, dependencies will automatically be installed when Sail runs.
+
+### 5. Run Migrations
+
+To create the necessary tables in your database, run:
+
+```bash
+./vendor/bin/sail artisan migrate
+```
+
+This will run the migrations for tasks and users in the PostgreSQL database.
+
+### 6. Create API Documentation
+
+If you are using **Scribe** for API documentation (optional):
+
+```bash
+./vendor/bin/sail artisan scribe:generate
+```
+
+This will generate the API documentation in `public/docs`.
+
+### 7. Create Predefined Users (Optional)
+
+You can use a seeder to generate test users. Create a new seeder file:
+
+```bash
+./vendor/bin/sail artisan make:seeder UserSeeder
+```
+
+Then, you can define a few users in the seeder (refer to the previous steps for seeding users).
+
+Finally, run:
+
+```bash
+./vendor/bin/sail artisan db:seed --class=UserSeeder
+```
+
+### 8. Test the API
+
+Once everything is set up, your application should be accessible at:
+
+- **API URL**: `http://localhost` (or `http://127.0.0.1`)
+
+---
+
+## **Testing the API**
+
+### Authentication Routes
+
+- **Register a new user**:  
+  `POST /api/register`  
+  Request body:  
+  ```json
+  {
+    "email": "test@example.com",
+    "password": "password"
+  }
+  ```
+
+- **Login**:  
+  `POST /api/login`  
+  Request body:  
+  ```json
+  {
+    "email": "test@example.com",
+    "password": "password"
+  }
+  ```
+
+  Response:  
+  ```json
+  {
+    "access_token": "your-access-token"
+  }
+  ```
+
+- **Verify Email**:  
+  `GET /api/verify-email/{id}/{hash}`  
+  Example:  
+  `GET /api/verify-email/1/abc123`
+
+- **Logout**:  
+  `POST /api/logout`  
+  Authenticated request with a Bearer token.
+
+### Task Routes (Protected by Authentication)
+
+- **Get all tasks**:  
+  `GET /api/tasks`  
+  (Authenticated)
+
+- **Create a new task**:  
+  `POST /api/tasks`  
+  Request body:  
+  ```json
+  {
+    "name": "New Task",
+    "description": "Description of the new task",
+    "is_completed": false
+  }
+  ```
+
+- **Show a specific task**:  
+  `GET /api/tasks/{id}`  
+  Example:  
+  `GET /api/tasks/1`
+
+- **Update a task**:  
+  `PATCH /api/tasks/{id}`  
+  Request body:  
+  ```json
+  {
+    "name": "Updated Task",
+    "description": "Updated description",
+    "is_completed": true
+  }
+  ```
+
+- **Delete a task**:  
+  `DELETE /api/tasks/{id}`  
+  Example:  
+  `DELETE /api/tasks/1`
+
+- **Filter tasks by status**:  
+  `GET /api/tasks/filter/{status}`  
+  Example:  
+  `GET /api/tasks/filter/completed`
+
+  Status options:  
+  - `completed`
+  - `not_completed`
+
+---
+
+## **API Routes Summary**
+
+| Method | Endpoint                                | Description                                   |
+|--------|-----------------------------------------|-----------------------------------------------|
+| POST   | /api/register                           | Register a new user                           |
+| POST   | /api/login                              | Login and get an access token                |
+| GET    | /api/verify-email/{id}/{hash}           | Verify user email                            |
+| POST   | /api/logout                             | Logout the authenticated user                |
+| GET    | /api/tasks                              | List all tasks (requires auth)               |
+| POST   | /api/tasks                              | Create a new task (requires auth)            |
+| GET    | /api/tasks/{id}                         | Show details of a specific task (requires auth)|
+| PATCH  | /api/tasks/{id}                         | Update a task (requires auth)                |
+| DELETE | /api/tasks/{id}                         | Delete a task (requires auth)                |
+| GET    | /api/tasks/filter/{status}              | Filter tasks by status (requires auth)       |
+
+---
+
+## **Project Structure**
+
+Here’s an overview of the key project files and directories:
+
+- **app/Http/Controllers**: Contains controllers like `TaskController`, `AuthenticationController`, etc.
+- **database/migrations**: Contains migration files for setting up tables (tasks, users, etc.).
+- **routes/api.php**: API route definitions.
+- **.env**: Environment configuration file.
+- **docker-compose.yml**: Docker Compose configuration for multi-container setup.
+
+---
+
+## **Troubleshooting**
+
+- If you get a `404` error, ensure that the routes are defined correctly in `routes/api.php` and that the application is running (`./vendor/bin/sail up`).
+- If authentication fails, check that Laravel Sanctum is installed and configured correctly.
+
+---
