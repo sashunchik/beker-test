@@ -69,20 +69,9 @@ Start the Laravel application with Docker using Laravel Sail:
 ```
 
 This will launch the application, PostgreSQL, and other necessary services in Docker containers.
+Dependencies will automatically be installed when Sail runs.
 
-### 4. Install Dependencies
-
-If you're not using Docker and prefer to run the app locally:
-
-- Install Composer dependencies:
-
-```bash
-composer install
-```
-
-- If using Docker, dependencies will automatically be installed when Sail runs.
-
-### 5. Run Migrations
+### 4. Run Migrations
 
 To create the necessary tables in your database, run:
 
@@ -92,33 +81,7 @@ To create the necessary tables in your database, run:
 
 This will run the migrations for tasks and users in the PostgreSQL database.
 
-### 6. Create API Documentation
-
-If you are using **Scribe** for API documentation (optional):
-
-```bash
-./vendor/bin/sail artisan scribe:generate
-```
-
-This will generate the API documentation in `public/docs`.
-
-### 7. Create Predefined Users (Optional)
-
-You can use a seeder to generate test users. Create a new seeder file:
-
-```bash
-./vendor/bin/sail artisan make:seeder UserSeeder
-```
-
-Then, you can define a few users in the seeder (refer to the previous steps for seeding users).
-
-Finally, run:
-
-```bash
-./vendor/bin/sail artisan db:seed --class=UserSeeder
-```
-
-### 8. Test the API
+### 5. Test the API
 
 Once everything is set up, your application should be accessible at:
 
@@ -244,9 +207,3 @@ Here’s an overview of the key project files and directories:
 
 ---
 
-## **Troubleshooting**
-
-- If you get a `404` error, ensure that the routes are defined correctly in `routes/api.php` and that the application is running (`./vendor/bin/sail up`).
-- If authentication fails, check that Laravel Sanctum is installed and configured correctly.
-
----
